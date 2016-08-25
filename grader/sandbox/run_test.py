@@ -1,7 +1,7 @@
 from os import path
 from sys import argv, exit
-from grader import runner
-from grader.working_directory import WorkingDirectory
+from grader.grader import runner
+from grader.grader.working_directory import WorkingDirectory
 
 if len(argv) < 5:
     print("Usage: run_test <lang> <tester-path> <solution-path> <test-index>")

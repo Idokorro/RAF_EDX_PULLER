@@ -1,7 +1,7 @@
 import sys
 from os import path
-from grader import terminal
-from grader import config
+from grader.grader import terminal
+from grader.grader import config
 from threading import Thread
 from .stdio import SyncCondition, SpoofedStdin, SpoofedStdout
 

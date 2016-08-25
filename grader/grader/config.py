@@ -1,7 +1,7 @@
 LANGUAGES = ['Java', 'C', 'C#']
 
 BASE_CMD = [
-    'docker',
+    '/usr/local/bin/docker',
     'run',
     '--rm',
     '-v'

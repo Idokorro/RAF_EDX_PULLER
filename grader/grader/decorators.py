@@ -1,4 +1,4 @@
-from grader import grader
+from grader.grader import grader
 from functools import wraps
 
 def test(test_function):

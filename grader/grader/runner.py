@@ -1,8 +1,8 @@
 from time import time, sleep
 
-from grader import grader
-from grader import utils
-from grader import program_container
+from grader.grader import grader
+from grader.grader import utils
+from grader.grader import program_container
 
 RESULT_DEFAULTS = {
     "log": [],

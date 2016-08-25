@@ -1,6 +1,6 @@
-from grader import working_directory
-from grader import runner
-from grader import utils
+from grader.grader import working_directory
+from grader.grader import runner
+from grader.grader import utils
 
 DEFAULT_TEST_SETTINGS = {
     # hooks that run before tests

@@ -1,4 +1,4 @@
-from grader import decorators
+from grader.grader import decorators
 
 @decorators.test
 def test_hello_world(m):
