@@ -1,9 +1,9 @@
 import os
 import argparse
 
-from grader.grader import grader
-from grader.grader import config
-from grader.grader import utils
+from grader import grader
+from grader import config
+from grader import utils
 
 def is_valid_path(path, raiseError=True):
     abs_path = os.path.abspath(path)

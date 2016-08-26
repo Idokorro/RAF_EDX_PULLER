@@ -1,6 +1,6 @@
-from grader.grader import working_directory
-from grader.grader import runner
-from grader.grader import utils
+from .working_directory import *
+from .runner import *
+from .utils import *
 
 DEFAULT_TEST_SETTINGS = {
     # hooks that run before tests
@@ -11,13 +11,13 @@ DEFAULT_TEST_SETTINGS = {
     "timeout": 1.0
 }
 
-testcases = utils.OrderedDictionary()
+testcases = OrderedDictionary()
 
 
 
 def test_solution(lang, tester_path, solution_path):
 
-    with working_directory.WorkingDirectory(tester_path, solution_path) as directory:
+    with WorkingDirectory(tester_path, solution_path) as directory:
 
         try:
             testcases.load_from(tester_path)
@@ -27,7 +27,7 @@ def test_solution(lang, tester_path, solution_path):
         if len(testcases) == 0:
             return _fail_result("No tests found in tester")
 
-        test_results = [runner.run_testcase(lang, directory.tester_path, directory.solution_path, test_name, {}) for test_name in testcases]
+        test_results = [run_testcase(lang, directory.tester_path, directory.solution_path, test_name, {}) for test_name in testcases]
 
     results = {"results": test_results, "success": True}
     return results

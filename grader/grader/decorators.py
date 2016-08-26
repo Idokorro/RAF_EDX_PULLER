@@ -1,5 +1,6 @@
-from grader.grader import grader
+from .grader import *
 from functools import wraps
+
 
 def test(test_function):
     """ Decorator for a test. The function should take a single argument which
@@ -21,6 +22,6 @@ def test(test_function):
             raise module.caughtException
         return result
 
-    name = grader.get_test_name(test_function)
-    grader.testcases[name] = wrapper
+    name = get_test_name(test_function)
+    testcases[name] = wrapper
     return wrapper

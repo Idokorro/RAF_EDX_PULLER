@@ -1,8 +1,9 @@
 from time import time, sleep
 
-from grader.grader import grader
-from grader.grader import utils
-from grader.grader import program_container
+from grader import grader
+from .utils import *
+from .program_container import *
+from .terminal import *
 
 RESULT_DEFAULTS = {
     "log": [],
@@ -30,15 +31,14 @@ def run_testcase(lang, tester_path, solution_path, test_name, options):
 
         Post-hooks can manipulate with the test results before returning.
     """
-    from grader import terminal
 
     #TODO: zakucane stvari
     options["timeout"] = 10.0 #grader.get_setting(test_name, "timeout")
     test_index = 0
 
-    start = time()
-    success, stdout, stderr = terminal.run_test(lang, tester_path, solution_path, test_index, options)
-    end = time()
+    start = time.time()
+    success, stdout, stderr = run_test(lang, tester_path, solution_path, test_index, options)
+    end = time.time()
 
     result = RESULT_DEFAULTS.copy()
     if (end - start) > options["timeout"]:
@@ -46,14 +46,14 @@ def run_testcase(lang, tester_path, solution_path, test_name, options):
         result["traceback"] = "Timeout"
     else:
         try:
-            result = utils.load_json(stdout)
+            result = load_json(stdout)
         except Exception as e:
             result["traceback"] = stdout
             result["stderr"] = stderr
 
     result.update(success=success, description=test_name, time=("%.3f" % (end - start)))
     # after test hooks - cleanup
-    utils.call_all(grader.get_setting(test_name, "post-hooks"), result)
+    call_all(grader.get_setting(test_name, "post-hooks"), result)
     return result
 
 def check_testcase(lang, tester_path, solution_path, test_index):
@@ -61,7 +61,7 @@ def check_testcase(lang, tester_path, solution_path, test_index):
         pre-test hooks and tries to execute it.
 
         If an exception was raised by call, prints it to stdout """
-    utils.import_module(tester_path)
+    import_module(tester_path)
     test_name = list(grader.testcases.keys())[test_index]
     test_function = grader.testcases[test_name]
 
@@ -78,7 +78,7 @@ def check_testcase(lang, tester_path, solution_path, test_index):
 
     # start users program
     try:
-        module = program_container.ProgramContainer(lang, solution_path, results)
+        module = ProgramContainer(lang, solution_path, results)
         while not hasattr(module, "response"):
             sleep(0.001)
         module.condition.acquire()
@@ -86,9 +86,9 @@ def check_testcase(lang, tester_path, solution_path, test_index):
     except Exception as e:
         if module.caughtException is not None:
             e = module.caughtException
-        results["error_message"] = utils.get_error_message(e)
-        results["traceback"] = utils.get_traceback(e)
+        results["error_message"] = get_error_message(e)
+        results["traceback"] = get_traceback(e)
         raise
     finally:
         module.restore_io()
-        print(utils.dump_json(results))
+        print(dump_json(results))
