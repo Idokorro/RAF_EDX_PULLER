@@ -51,10 +51,10 @@ class ProgramContainer(Thread):
         file_path = path.dirname(self.module_path)
         file_name = path.basename(self.module_path)
 
-        response = terminal.call_command(config.calculate_compile_command(self.lang, file_path, file_name))
+        response = call_command(calculate_compile_command(self.lang, file_path, file_name))
 
         if response[STATUS] == 0:
-            response = terminal.call_command(config.calculate_run_command(self.lang, file_path, file_name))
+            response = call_command(calculate_run_command(self.lang, file_path, file_name))
             self.stdout.write(response[RESULT])
         else:
             raise Exception(response[EXCEPTION])

@@ -6,7 +6,7 @@ import time
 import sys
 
 CURRENT_FOLDER = os.path.abspath(os.path.dirname(__file__))
-SANDBOX_DIR = os.path.join(os.path.dirname(CURRENT_FOLDER), "sandbox")
+SANDBOX_DIR = os.path.join(os.path.dirname(CURRENT_FOLDER), "")
 TEST_RUN_CMD = [sys.executable, os.path.join(SANDBOX_DIR, "run_test.py")]
 
 
