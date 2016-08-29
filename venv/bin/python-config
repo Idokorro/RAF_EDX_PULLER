@@ -1,4 +1,4 @@
-#!/home/skantar/Documents/Projects/GraderFinal/venv/bin/python
+#!/root/PycharmProjects/RAF_EDX/venv/bin/python
 
 import sys
 import getopt

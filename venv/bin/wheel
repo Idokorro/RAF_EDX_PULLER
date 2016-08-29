@@ -1,4 +1,4 @@
-#!/home/skantar/Documents/Projects/GraderFinal/venv/bin/python3.5
+#!/root/PycharmProjects/RAF_EDX/venv/bin/python3.5
 
 # -*- coding: utf-8 -*-
 import re
