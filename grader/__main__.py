@@ -5,6 +5,7 @@ from grader import grader
 from grader import config
 from grader import utils
 
+
 def is_valid_path(path, raiseError=True):
     abs_path = os.path.abspath(path)
     if not os.path.exists(abs_path):
@@ -13,11 +14,13 @@ def is_valid_path(path, raiseError=True):
         return None
     return abs_path
 
+
 def is_valid_language(lang, raiseError=True):
-    if lang not in config.LANGUAGES:
+    if lang.lower() not in config.LANGUAGES:
         if raiseError:
             raise argparse.ArgumentTypeError("This language({0}) is not supported".format(lang))
     return lang
+
 
 parser = argparse.ArgumentParser(description='Test a program.')
 

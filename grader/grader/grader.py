@@ -14,7 +14,6 @@ DEFAULT_TEST_SETTINGS = {
 testcases = OrderedDictionary()
 
 
-
 def test_solution(lang, tester_path, solution_path):
 
     with WorkingDirectory(tester_path, solution_path) as directory:
@@ -32,6 +31,7 @@ def test_solution(lang, tester_path, solution_path):
     results = {"results": test_results, "success": True}
     return results
 
+
 def _fail_result(reason, **extra_info):
     result = {
         "success": False,
@@ -40,6 +40,7 @@ def _fail_result(reason, **extra_info):
     }
     return result
 
+
 def _test_load_failure(exception):
     from . import utils
     return _fail_result(
@@ -47,12 +48,14 @@ def _test_load_failure(exception):
         error_message=utils.get_error_message(exception),
         traceback=utils.get_traceback(exception))
 
+
 def get_test_name(function):
     """ Returns the test name as it is used by the grader. Used internally. """
     name = function.__name__
     # if inspect.getdoc(function):
     #     name = utils.beautifyDescription(inspect.getdoc(function))
     return name
+
 
 def get_setting(test_function, setting_name):
     """ Returns a test setting. Used internally. """

@@ -11,9 +11,11 @@ RESULT_DEFAULTS = {
     "traceback": ""
 }
 
+
 def call_all(function_list, *args, **kwargs):
     for fun in function_list:
         fun(*args)
+
 
 def run_testcase(lang, tester_path, solution_path, test_name, options):
     """ Calls the test, checking if it doesn't raise an Exception.
@@ -55,6 +57,7 @@ def run_testcase(lang, tester_path, solution_path, test_name, options):
     # after test hooks - cleanup
     call_all(grader.get_setting(test_name, "post-hooks"), result)
     return result
+
 
 def check_testcase(lang, tester_path, solution_path, test_index):
     """ Called in another process. Finds the test `test_name`,  calls the

@@ -51,12 +51,9 @@ class ProgramContainer(Thread):
         file_path = path.dirname(self.module_path)
         file_name = path.basename(self.module_path)
 
-        response = call_command(calculate_compile_command(self.lang, file_path, file_name))
+        response = call_command(calculate_compile_and_execute_command(self.lang, file_path, file_name))
 
-        if response[STATUS] == 0:
-            response = call_command(calculate_run_command(self.lang, file_path, file_name))
-            self.stdout.write(response[RESULT])
-        else:
+        if response[EXCEPTION] != '':
             raise Exception(response[EXCEPTION])
         return response
 

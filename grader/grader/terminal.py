@@ -5,6 +5,7 @@ import signal
 import time
 import sys
 
+
 CURRENT_FOLDER = os.path.abspath(os.path.dirname(__file__))
 SANDBOX_DIR = os.path.join(os.path.dirname(CURRENT_FOLDER), "")
 TEST_RUN_CMD = [sys.executable, os.path.join(SANDBOX_DIR, "run_test.py")]
@@ -24,6 +25,7 @@ def run_test(lang, tester_path, solution_path, test_index, options):
     status, stdout, stderr = call_command(cmd, timeout)
     return status == 0, stdout, stderr
     # return True, '', ''
+
 
 def call_command(cmd, timeout=float('inf'), cwd=None, decode=True, **subproc_options):
     if cwd is None:
@@ -55,6 +57,7 @@ def call_command(cmd, timeout=float('inf'), cwd=None, decode=True, **subproc_opt
         status = 1
     return status, stdout, stderr
 
+
 def read_proc_results(proc, decode):
     stdout = proc.stdout.read()
     stderr = proc.stderr.read()
@@ -63,6 +66,7 @@ def read_proc_results(proc, decode):
         stderr = stderr.decode('utf-8')
     status = proc.returncode
     return status, stdout, stderr
+
 
 def microseconds_passed(time_delta):
     return time_delta.microseconds + time_delta.seconds * 10**6
