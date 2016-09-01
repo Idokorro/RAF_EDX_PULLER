@@ -6,10 +6,29 @@ import urllib3
 import xqueue_util as util
 import settings
 import project_urls
+import os
+import datetime
+import subprocess
+import signal
+
 
 log = logging.getLogger(__name__)
 
 QUEUE_NAME = settings.QUEUE_NAME
+
+GRADER_ROOT = '/root/PycharmProjects/RAF_EDX/grader'
+
+EXTENSIONS = {
+    'java': '.java',
+    'c': '.c',
+    'c#': '.mono',
+    'mono': '.mono',
+    'python': '.py',
+    'python2': '.py',
+    'python3': '.py',
+    'php': '.php'
+}
+
 
 def each_cycle():
     print('[*]Logging in to xqueue')
@@ -23,14 +42,21 @@ def each_cycle():
             grade(content)
             content_header = json.loads(content['xqueue_header'])
             content_body = json.loads(content['xqueue_body'])
+            grader_payload = json.loads(content_body['grader_payload'])
 
-            #TODO:
+
+            # Calling grader
+            grader_status, grader_stdout, grader_stderr = run_external_grader(content_header, content_body, grader_payload)
+
 
             xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], True, 1, '<p><emph>Good Job!</emph></p>', 'reference_dummy_grader')
-            (success, msg) = util.post_results_to_xqueue(session, json.dumps(xqueue_header), json.dumps(xqueue_body),)
+            (success, msg) = util.post_results_to_xqueue(session, json.dumps(xqueue_header), json.dumps(xqueue_body))
             if success:
                 print("successfully posted result back to xqueue")
 
+
+def microseconds_passed(time_delta):
+    return time_delta.microseconds + time_delta.seconds * 10**6
 
 
 def grade(content):
@@ -47,6 +73,7 @@ def grade(content):
         f.close()
         response.close()
 
+
 def get_from_queue(queue_name,xqueue_session):
     """
         Get a single submission from xqueue
@@ -59,7 +86,6 @@ def get_from_queue(queue_name,xqueue_session):
         return False, "Error getting response: {0}".format(err)
     
     return success, response
-
 
 
 def get_queue_length(queue_name,xqueue_session):
@@ -80,10 +106,58 @@ def get_queue_length(queue_name,xqueue_session):
     
     return True, response
 
+
+def run_external_grader(content_header, content_body, grader_payload):
+    student_response_file_path = GRADER_ROOT + '/examples/' + content_header['submission_key'] + EXTENSIONS[grader_payload['lang'].lower()]
+
+    student_response_file = open(student_response_file_path, 'w')
+    student_response_file.write(content_body['student_response'])
+    student_response_file.close()
+
+    grader_command = [
+        'python3.5',
+        GRADER_ROOT + '/__main__.py',
+        grader_payload['lang'],
+        GRADER_ROOT + '/examples/' + grader_payload['tester'],
+        student_response_file_path
+    ]
+
+    start = datetime.datetime.now()
+    timeout = 10
+
+    subproc = subprocess.Popen(
+        grader_command,
+        cwd=os.getcwd(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+
+    reached_timeout = False
+    while subproc.poll() is None:
+        time.sleep(0.02)
+        now = datetime.datetime.now()
+        if microseconds_passed(now - start) >= timeout * 10**6:
+            subproc.kill()
+            os.kill(subproc.pid, signal.SIGKILL)
+            os.waitpid(-1, os.WNOHANG)
+            reached_timeout = True
+            break
+
+    os.remove(student_response_file_path)
+
+    subproc_stdout = subproc.stdout.read()
+    subproc_stderr = subproc.stderr.read()
+    subproc_stdout = subproc_stdout.decode('utf-8')
+    subproc_stderr = subproc_stderr.decode('utf-8')
+    subproc_status = subproc.returncode
+
+    return subproc_status, subproc_stdout, subproc_stderr
+
+
 try:
     logging.basicConfig()
     while True:
         each_cycle()
         time.sleep(2)
 except KeyboardInterrupt:
-    print ('^C received, shutting down')
+    print('^C received, shutting down')

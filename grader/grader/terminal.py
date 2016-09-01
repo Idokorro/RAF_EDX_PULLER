@@ -4,7 +4,7 @@ import datetime
 import signal
 import time
 import sys
-
+from .config import *
 
 CURRENT_FOLDER = os.path.abspath(os.path.dirname(__file__))
 SANDBOX_DIR = os.path.join(os.path.dirname(CURRENT_FOLDER), "")
@@ -17,6 +17,7 @@ def run_test(lang, tester_path, solution_path, test_index, options):
         lang,
         tester_path,
         solution_path,
+        SCRIPTS[lang.lower()],
         str(test_index)
     ]
     timeout = options.get('timeout', 1.0)

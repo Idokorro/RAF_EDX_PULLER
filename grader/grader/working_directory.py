@@ -4,10 +4,12 @@ from tempfile import NamedTemporaryFile, mkdtemp
 
 
 class WorkingDirectory(object):
-    def __init__(self, tester_path, solution_path):
+    def __init__(self, tester_path, solution_path, script_path=None):
         self.path = mkdtemp()
         self.tester_path = self._copy(tester_path)
         self.solution_path = self._copy(solution_path)
+        if not script_path is None and not script_path == 'None':
+            self.script_path = self._copy(script_path)
 
     def _copy(self, file_path):
         if os.path.isdir(file_path):
