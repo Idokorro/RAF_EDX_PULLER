@@ -55,6 +55,8 @@ class ProgramContainer(Thread):
 
         if response[EXCEPTION] != '':
             raise Exception(response[EXCEPTION])
+        else:
+            self.stdout.write(response[RESULT])
         return response
 
     def log(self, what):

@@ -35,7 +35,7 @@ def run_testcase(lang, tester_path, solution_path, test_name, options):
     """
 
     #TODO: zakucane stvari
-    options["timeout"] = 10.0 #grader.get_setting(test_name, "timeout")
+    options["timeout"] = 1000.0 #grader.get_setting(test_name, "timeout")
     test_index = 0
 
     start = time.time()

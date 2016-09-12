@@ -10,7 +10,7 @@ import os
 import datetime
 import subprocess
 import signal
-from grader.grader import grader
+from grader import grader
 
 
 log = logging.getLogger(__name__)
@@ -48,10 +48,10 @@ def each_cycle():
 
 
             # Calling grader
-            grader_status, grader_stdout, grader_stderr = run_external_grader(content_header, content_body)
+            correct, score, msg = run_external_grader(content_header, content_body)
 
 
-            xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], True, 1, '<p><emph>Good Job!</emph></p>', 'reference_dummy_grader')
+            xqueue_header, xqueue_body = util.create_xqueue_header_and_body(content_header['submission_id'], content_header['submission_key'], correct, score, msg, 'reference_dummy_grader')
             (success, msg) = util.post_results_to_xqueue(session, json.dumps(xqueue_header), json.dumps(xqueue_body))
             if success:
                 print("successfully posted result back to xqueue")
@@ -112,24 +112,28 @@ def run_external_grader(content_header, content_body):
 
     #GRADER
     grader_url = urllib.request.urlopen("http://" + grader_payload['tester'])
-    grader_file_path = os.path.join(path, 'grader.py')
+    grader_file_path = os.path.join(path, 'Grader.py')
     with open(grader_file_path, 'wb') as f:
         f.write(grader_url.read())
     f.close()
     grader_url.close()
 
     #SUBMISSION
-    student_response_file_path = os.path.join(path, 'submission' + EXTENSIONS[grader_payload['lang']])
+    student_response_file_path = os.path.join(path, 'Submission' + EXTENSIONS[grader_payload['lang']])
     with open(student_response_file_path, 'w') as f:
         f.write(content_body['student_response'])
     f.close()
 
     #EXECUTE
-    result = grader.test_solution(grader_payload['lang'], grader_file_path, student_response_file_path)
+    results = grader.test_solution(grader_payload['lang'], grader_file_path, student_response_file_path)
 
+    return calculate_correction(results)
 
-
-    return None, None, None
+def calculate_correction(results):
+    for result in results["results"]:
+        if not result["success"]:
+            return False, 0, "<p><emph>" + result["error_message"] + "</emph></p>" + "<p>" + result["traceback"] + "</p>"
+    return True, 1, "<p><emph>Uspešno ste rešili problem. Čestitamo!</emph></p>"
 
 try:
     logging.basicConfig()
@@ -138,3 +142,4 @@ try:
         time.sleep(2)
 except KeyboardInterrupt:
     print('^C received, shutting down')
+
