@@ -1,1 +1,0 @@
-print u"Hello World"
