@@ -14,14 +14,14 @@ Suported languages:
 * PHP
 
 Setup
-_____
+=====
 1. Clone repository
 2. Update [urls.py](urls.py) with addresses of your XQueue server
 3. Update [settings.py](settings.py) with your login information and queue name
 4. Run with '''python3.5 edx_grader.py'''
 
 Usage
-_____
+=====
 1. Upload your tester methods in a file through studio file upload tool
 2. Create new **Blank Advanced Problem**
 3. Edit your **<coderesponse>** XML
@@ -32,7 +32,7 @@ _____
     * tester - web link to your uploaded file with tester methods
 
 Example problem:
-'''
+'''python
 <problem>
   <coderesponse queuename="raf_grader">
     <label>Write a program that prints "hello world".</label>
