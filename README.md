@@ -16,9 +16,9 @@ Suported languages:
 Setup
 =====
 1. Clone repository
-2. Update [/urls.py](urls.py) with addresses of your XQueue server
-3. Update [/settings.py](settings.py) with your login information and queue name
-4. Run with '''python3.5 edx_grader.py'''
+2. Update [edx-grader/urls.py](urls.py) with addresses of your XQueue server
+3. Update [edx-grader/settings.py](settings.py) with your login information and queue name
+4. Run with ```python3.5 edx_grader.py```
 
 Usage
 =====
