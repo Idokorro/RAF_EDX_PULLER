@@ -1,17 +1,11 @@
 using System;
 
-/*class MainClass {
+class MainClass {
     public static void Main (string[] args) {
         int a, b, c;
         int.TryParse(Console.ReadLine(), out a);
         int.TryParse(Console.ReadLine(), out b);
         c = a + b;
         Console.WriteLine (c);
-    }
-}*/
-
-class MainClass {
-    public static void Main (string[] args) {
-        Console.WriteLine ("Hello World");
     }
 }

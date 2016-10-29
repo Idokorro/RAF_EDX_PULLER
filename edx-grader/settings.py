@@ -1,5 +1,5 @@
 XQUEUE_INTERFACE = {
-    "url": "http://edx.netbox.rs:18040/",
+    "url": "http://192.168.1.115:18040/",
     "django_auth": {
         "username": "lms",
         "password": "password"
@@ -9,5 +9,5 @@ XQUEUE_INTERFACE = {
 
 REQUESTS_TIMEOUT = 60
 
-QUEUE_NAME = 'cpp-grader'
+QUEUE_NAME = 'raf_grader'
 

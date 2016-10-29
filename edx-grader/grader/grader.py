@@ -1,4 +1,4 @@
-from grader.utils import OrderedDictionary, beautifyDescription, load_json
+from grader.utils import OrderedDictionary, beautifyDescription
 from grader.working_directory import WorkingDirectory
 import inspect
 
@@ -10,17 +10,19 @@ DEFAULT_TEST_SETTINGS = {
     # hooks that run after tests
     "post-hooks": (),
     # timeout for function run
-    "timeout": 1.0
+    "timeout": 1.0,
+    # check template
+    "template": "${code}",
 }
 
-### Exposed methods to test files/code
-def test_submission(language, tester_path, solution_path, other_files=[]):
+
+def test_submission(language, tester_path, solution_path, other_files=None):
     """ Runs all tests for the solution given as argument.
 
+        :param str language: Language of solution
         :param str tester_path: Path to the tester used.
         :param str solution_path: Path to the solution being tested.
         :param list other_files: Paths to other files to put into same directory while testing.
-        :param sandbox_cmd: Sandbox to use. Set this to 'docker' to use the built-in docker sandbox.
 
         :return: Dictionary of test results.
 
@@ -43,12 +45,11 @@ def test_submission(language, tester_path, solution_path, other_files=[]):
             }
     """
 
-    # from .execution_base import do_testcase_run
+    if not other_files:
+        other_files = []
 
-    # copy files for during the tests to /tmp
     with WorkingDirectory(language, tester_path, solution_path, other_files) as assets:
 
-        # populate tests. TODO: add error handling
         try:
             testcases.load_from(assets.tester_path)
         except Exception as e:
@@ -65,19 +66,20 @@ def test_submission(language, tester_path, solution_path, other_files=[]):
     results = {"results": test_results, "success": True}
     return results
 
-def test_code(language, tester_code, user_code, other_files=[], *args, **kwargs):
+
+def test_code(language, tester_code, user_code, other_files=None):
     """ Tests code. See :func:`test_module` for argument and return value description. """
+    if not other_files:
+        other_files = []
+
     with WorkingDirectory(language, tester_code, user_code, other_files, is_code=True) as assets:
         return test_submission(
             language,
             assets.tester_path,
             assets.solution_path,
-            assets.other_files,
-            *args,
-            **kwargs
+            assets.other_files
         )
 
-## Helpers
 
 def _fail_result(reason, **extra_info):
     result = {
@@ -87,12 +89,14 @@ def _fail_result(reason, **extra_info):
     }
     return result
 
+
 def _test_load_failure(exception):
     from grader import utils
     return _fail_result(
         "Load tests failure",
         error_message=utils.get_error_message(exception),
         traceback=utils.get_traceback(exception))
+
 
 def get_test_name(function):
     """ Returns the test name as it is used by the grader. Used internally. """
@@ -101,6 +105,7 @@ def get_test_name(function):
         name = beautifyDescription(inspect.getdoc(function))
     return name
 
+
 def get_setting(test_function, setting_name):
     """ Returns a test setting. Used internally. """
     if isinstance(test_function, str):
@@ -108,6 +113,7 @@ def get_setting(test_function, setting_name):
     if not hasattr(test_function, "_grader_settings_"):
         test_function._grader_settings_ = DEFAULT_TEST_SETTINGS.copy()
     return test_function._grader_settings_[setting_name]
+
 
 def set_setting(test_function, setting_name, value):
     """ Sets a test setting. Used internally. """

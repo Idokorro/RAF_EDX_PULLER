@@ -6,7 +6,8 @@ def import_module(path, name=None):
     if name is None:
         name = path
     import importlib.machinery
-    loader = importlib.machinery.SourceFileLoader(name, path)
+    loader = importlib.machinery.SourceFileLoader(name,
+                                                  path)
     module = loader.load_module(name)
     return module
 
@@ -67,6 +68,7 @@ def read_code(path):
 
 from collections import OrderedDict
 class OrderedDictionary(OrderedDict):
+    """ Dictionary for storing testcases """
     def load_from(self, module_path):
         self.clear()
         import_module(module_path)

@@ -13,7 +13,9 @@ def call_all(function_list, *args, **kwargs):
         fun(*args)
 
 class TestCase(object):
-
+    """
+        Class represents test case
+    """
     def __init__(self, name, function, options):
         self._name = name
         self._function = function
@@ -37,12 +39,16 @@ class TestCase(object):
             Post-hooks can manipulate with the test results before returning.
         """
         from grader.grader import get_setting, testcases
-        from grader.code_runner import call_test
+        from grader.terminal import call_test
 
         test_index = list(testcases.keys()).index(self._name)
 
         start = time()
-        success, stdout, stderr = call_test(test_index, language, tester_path, solution_path, self._options)
+        success, stdout, stderr = call_test(test_index,
+                                            language,
+                                            tester_path,
+                                            solution_path,
+                                            self._options) # call terminal command
         end = time()
 
         result = RESULT_DEFAULTS.copy()

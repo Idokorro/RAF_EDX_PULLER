@@ -94,7 +94,7 @@ def parse_xobject(xobject, queue_name):
         header = json.loads(xobject['xqueue_header'])
         header.update({'queue_name': queue_name})
         body = json.loads(xobject['xqueue_body'])
-        files = json.loads(xobject['xqueue_files'])
+        files = json.loads(xobject['xqueue_files']) if xobject['xqueue_files'] != "" else ""
         
         content = {'xqueue_header': json.dumps(header),
             'xqueue_body': json.dumps(body),

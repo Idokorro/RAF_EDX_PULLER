@@ -66,6 +66,7 @@ def grade_submission(content_header, content_body):
     submission_code = content_body['student_response']
 
     result = test_code(language, grader_code, submission_code)
+    print(result)
 
     return True, 1, "<p>Correct</p>"
 
