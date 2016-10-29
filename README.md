@@ -1,16 +1,59 @@
-# RAF_EDX
+RAF Open edX Pull Grader
+========================
 
-##TO-DO
+External pull grader for code grading in Open edX courses.
+Grader pulled from here:
+https://github.com/SKantar/AlgorithmsGrader
 
-1. AssertionError runner.py 84 module = ProgramContainer(lang, solution_path, results)
+Suported languages:
+* Python 3.5
+* Python 2.7
+* C
+* C#
+* Java
+* PHP
 
-2. da se obradi rezultat gradera u xqueue pulleru
+Setup
+_____
+1. Clone repository
+2. Update [urls.py](urls.py) with addresses of your XQueue server
+3. Update [settings.py](settings.py) with your login information and queue name
+4. Run with '''python3.5 edx_grader.py'''
 
-3. da se sredi struktura direktorijuma za submissione (trenutno: examples/submission_key.[py|mono|java|c|php]
+Usage
+_____
+1. Upload your tester methods in a file through studio file upload tool
+2. Create new **Blank Advanced Problem**
+3. Edit your **<coderesponse>** XML
+4. Add <graader_payload> tag with parameters:
+    * lang - Programming language of submitted code
+    * num_points - Maximum number of points awarded
+    * partial - [True | False] Allow partial points based on the number of tests passed
+    * tester - web link to your uploaded file with tester methods
 
-4. da se sacuva tester.py (koji pise profesor) u odgovarajuci dir/file
-
-5. da se ukradu dekoratori
-	* https://github.com/macobo/python-grader
-
-6. da se sandboxuje tester
+Example problem:
+'''
+<problem>
+  <coderesponse queuename="raf_grader">
+    <label>Write a program that prints "hello world".</label>
+    <textbox rows="10" cols="80" mode="python" tabsize="4" points="10"/>
+    <codeparam>
+      <initial_display>
+        # students please write your program here
+        print("")
+      </initial_display>
+      <answer_display>
+        print "hello world"
+      </answer_display>
+      <grader_payload>
+        {
+        	"lang": "python3",
+        	"num_points": 10,
+        	"partial": false,
+        	"tester": "<some_address>/asset-v1:RAF+CS101+2016_T1+type@asset+block@hello_world_grader.py"
+        }
+      </grader_payload>
+    </codeparam>
+  </coderesponse>
+</problem>
+'''
