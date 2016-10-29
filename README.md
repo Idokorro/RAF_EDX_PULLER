@@ -16,8 +16,8 @@ Suported languages:
 Setup
 =====
 1. Clone repository
-2. Update [urls.py](urls.py) with addresses of your XQueue server
-3. Update [settings.py](settings.py) with your login information and queue name
+2. Update [/urls.py](urls.py) with addresses of your XQueue server
+3. Update [/settings.py](settings.py) with your login information and queue name
 4. Run with '''python3.5 edx_grader.py'''
 
 Usage
@@ -32,7 +32,7 @@ Usage
     * tester - web link to your uploaded file with tester methods
 
 Example problem:
-'''python
+```XML
 <problem>
   <coderesponse queuename="raf_grader">
     <label>Write a program that prints "hello world".</label>
@@ -56,4 +56,4 @@ Example problem:
     </codeparam>
   </coderesponse>
 </problem>
-'''
+```
