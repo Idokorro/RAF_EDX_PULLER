@@ -32,7 +32,7 @@ Usage
     * tester - web link to your uploaded file with tester methods
 
 Example problem:
-```XML
+```HTML
 <problem>
   <coderesponse queuename="raf_grader">
     <label>Write a program that prints "hello world".</label>
